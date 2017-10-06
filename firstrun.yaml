@@ -1,0 +1,21 @@
+---
+- hosts: all
+  user: root
+  tasks:
+  - name: ensure ansible user exists
+    user:
+      name: ansible
+      state: present
+      comment: Ansible
+  - name: ensure ansible user accepts the ssh keys
+    authorized_key:
+      user: ansible
+      key: "{{ lookup('file', '/root/.ssh/id_rsa.pub') }}"
+      state: present
+  - name: ensure the ansible user is sudoer with no password
+    lineinfile:
+      dest: /etc/sudoers
+      state: present
+      regexp: '^ansible ALL \='
+      line: 'ansible ALL=(ALL) NOPASSWD:ALL'
+      validate: 'visudo -cf %s'
