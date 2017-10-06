@@ -1,0 +1,15 @@
+---
+- hosts: all
+  remote_user: fale
+  tasks:
+  - name: ensure the httpd is installed
+    yum:
+      name: httpd
+      state: present
+    become: True
+  - name: ensure the httpd is enabled and running
+    service:
+      name: httpd
+      state: started
+      enabled: True
+    become: True
